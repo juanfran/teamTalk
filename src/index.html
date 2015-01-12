@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html ng-app="teamTalk">
+  <head>
+      <title>Team Talk</title>
+      <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.css">
+      <link rel="stylesheet" href="css/styles.css">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=0">
+  </head>
+  <body>
+      <header ng-controller="MenuController as menu" class="menu">
+          <ul class="current-chat-options">
+              <li><a title="toggle audio" ng-click="menu.toggleMicrophone()" class="fa fa-microphone fa-2x" ng-class="{off: !menu.microphone}" href=""></a></li>
+              <li><a title="toggle camere" ng-click="menu.toggleCamera()" class="fa fa-video-camera fa-2x" ng-class="{off: !menu.camera}" href=""></a></li>
+              <li><a title="share screen" ng-click="menu.toggleShareScreen()" class="fa fa-desktop fa-2x" ng-class="{off: !menu.sharescreen}" href=""></a></li>
+          </ul>
+          <ul class="configuration">
+              <li><a ng-click="menu.configuration()" class="fa fa-gears fa-2x" href=""></a></li>
+          </ul>
+      </header>
+      <section class="main">
+          <room>
+              <div class="localUser"></div>
+              <div class="remotes">
+              </div>
+          </room>
+
+          <chat>
+              <div class="text">
+                  <div class="message" ng-repeat="message in messages">
+                      <div class="user-name">{{::message.user}}:</div>
+                      <div class="message-text">{{::message.text}}</div>
+                  </div>
+              </div>
+              <input placeholder="write" type="text" ng-model="text" ng-keypress="chatKeyPress($event)" />
+          </chat>
+      </section>
+      <div class="overlay"></div>
+      <section ng-controller="ConfigurationController as config" class="configuration-lightbox lightbox">
+          <h2>Configuration</h2>
+          <form name="config.form" class="configuration-options" novalidate>
+              <div class="field">
+                  <label for="form-username">Username</label>
+                  <input id="form-username" name="username" required type="text" ng-model="config.data.username" />
+
+                  <div class="errors" ng-show="config.form.username.$dirty && config.form.username.$invalid">
+                      <span class="error" ng-show="config.form.username.$error.required">Username required</span>
+                  </div>
+              </div>
+              <div class="field capture-options">
+                  <label>Capture</label>
+                  <p>
+                      <input ng-model="config.data.capture" value="push-to-talk" id="form-capture-push" type="radio" name="capture" />
+                      <label for="form-capture-push">Push to talk</label>
+                      <input ng-show="config.data.capture == 'push-to-talk'" class="push-to-talk-btn" type="button" sethotkey hotkey="config.data.hotkey" />
+                  </p>
+                  <p>
+                      <input ng-model="config.data.capture" value="continous-transmission" id="form-capture-continuos" type="radio" name="capture" />
+                      <label for="form-capture-continuos">Continuous transmission</label>
+                  </p>
+              </div>
+              <div class="field">
+                  <button class="btn btn-save" ng-disabled="config.form.$invalid" ng-click="config.update()">Save</button>
+              </div>
+          </form>
+      </section>
+      <script type="text/javascript" src="lib/jquery/dist/jquery.js"></script>
+      <script type="text/javascript" src="lib/lodash/dist/lodash.js"></script>
+      <script type="text/javascript" src="lib/angular/angular.js"></script>
+      <script type="text/javascript" src="lib/traceur-runtime/traceur-runtime.js"></script>
+      <script type="text/javascript" src="js/simplewebrtc.bundle.js"></script>
+      <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>
